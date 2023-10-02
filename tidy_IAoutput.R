@@ -13,14 +13,14 @@ tidy_IAoutput <- function(file_path = IA_output_file_path,
   # check if file name exists
   
   if (file.exists(file_path)) {
-    str_c(file_name, " was found")
+    str_c(file_path, " was found")
   } else {
     beep(1)
     Sys.sleep(1)
     stop(
       str_c(
         "ERROR
-        ",file_name, " was not found.
+        ",file_path, " was not found.
         
         Ensure file path entered corresponds to the Image Analyst output .xlsx file")
       )
