@@ -1,4 +1,5 @@
-function() {
+
+merge_plate_metadata <- function() {
   # importing metadata regarding conditions of each well (IR or CTL, full serum or serum-starved, different drug concentrations etc.)
   
   ## plater
