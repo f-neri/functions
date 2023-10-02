@@ -1,33 +1,29 @@
 
-tidy_IAoutput <- function(file_name, subdirectory_name = "",
+tidy_IAoutput <- function(file_path = IA_output_file_path,
          DAPI_label_number = 1,
          EdU_label_number = 2,
          SABGal_label_number = 3,
          morphology_parameter = "Nuclear_Area") {
   
+  # add ".xlsx" if omitted in file path
+  
+  file_path <- if (str_detect(file_path, ".xlsx")) {file_path
+  } else {str_c(file_path, ".xlsx")}
+  
   # check if file name exists
   
-  ## Define the variable containing the Excel file name you want to check
-  file_name <- if (str_detect(file_name, ".xlsx")) {file_name
-  } else {str_c(file_name, ".xlsx")}
-  
-  ## Construct the full path to the file (within the subdirectory if present)
-  file_path <- if(subdirectory_name == "") {
-    file_name
-  } else {
-    file.path(subdirectory_name, file_name)
-  }
-  
   if (file.exists(file_path)) {
-    str_c(file_name, " exists within the working (or sub-) directory")
+    str_c(file_name, " was found")
   } else {
     beep(1)
-    Sys.sleep(2)
+    Sys.sleep(1)
     stop(
-      str_c(file_name, " does not exist within the working (or sub-) directory.
-
-Ensure you copy-pasted the Image Analyst ouput excel (.xlsx) file into the working (or sub-) directory
-and that such file name was entered correctly in the appropriate tidy_IAoutput function arguments"))
+      str_c(
+        "ERROR
+        ",file_name, " was not found.
+        
+        Ensure file path entered corresponds to the Image Analyst output .xlsx file")
+      )
   }
   
   # import IA-output file
