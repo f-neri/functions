@@ -1,5 +1,5 @@
 
-tidy_IAoutput <- function(file_path = IA_output_file_path,
+tidy_IAoutput <- function(file_path,
          DAPI_label_number = 1,
          EdU_label_number = 2,
          SABGal_label_number = 3,

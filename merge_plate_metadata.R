@@ -4,14 +4,14 @@
 # function to merge plate map/metadata with a tidied Image Analyst excel output
 
 merge_plate_metadata <- function(
-    tidied_IAoutput = tidied_IAoutput,
-    metadata_file_path = metadata_file_path
+    tidied_IAoutput_df,
+    metadata
     ) {
   # importing metadata regarding conditions of each well (IR or CTL, full serum or serum-starved, different drug concentrations etc.)
   
   ## plater
   plate_metadata <- read_plate(
-    file = metadata_file_path,             # full path to the .csv file
+    file = metadata,             # full path to the .csv file
     well_ids_column = "well",    # name to give column of well IDs (optional)
     sep = ","                     # separator used in the csv file (optional)
   )
@@ -53,7 +53,7 @@ The only metadata that can be entered in the plate-template file are
   
   plate_metadata_variables <- colnames(plate_metadata)[-1]
   
-  tidied_IAoutput %>%
+  tidied_IAoutput_df %>%
     left_join(plate_metadata, by = "well") %>%
     select(well, cell_ID, all_of(plate_metadata_variables), everything())
 }
