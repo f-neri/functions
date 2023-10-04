@@ -16,12 +16,12 @@ merge_plate_metadata <- function(
     sep = ","                     # separator used in the csv file (optional)
   )
   
-  ## change variable names to lower case, removing parenthesis (if present)
+  # change variable names to lower case, removing parenthesis (if present)
   colnames(plate_metadata) <- colnames(plate_metadata) %>%
     tolower() %>%
     str_replace_all(., "[()]", "")
   
-  ## check that plate-template contains Condition variable
+  # check that plate-template contains Condition variable
   if (any(colnames(plate_metadata) %in% "condition") == TRUE) {} else {
     beep(1)
     Sys.sleep(2)
@@ -29,8 +29,8 @@ merge_plate_metadata <- function(
       "The metadata entered in plate-template must contain the \"Condition\" variable"
     )}
   
-  ## check that the variables contained in plate-template are limited to
-  ## condition, and up to 2 additional variable (e.g. serum and/or drug treatment)
+  # check that the variables contained in plate-template are limited to
+  # condition, and up to 2 additional variable (e.g. serum and/or drug treatment)
   additional_variables <- colnames(plate_metadata) %>%
     .[-grep(pattern = "well|condition", .)]
   
@@ -43,11 +43,16 @@ merge_plate_metadata <- function(
 The only metadata that can be entered in the plate-template file are
 \"Condition\" and up to TWO more variable (e.g. \"Serum\" and/or \"Drug_concentration\")")
   }
+
+  # add plate column
   
-  additional_variables_check <-  if (length(additional_variables) > 0) {TRUE} else {FALSE}
-  multiple_additional_variables_check <- if (length(additional_variables) == 2) {TRUE} else {FALSE}
+  metadata_file_name <- metadata %>%
+    sub(pattern = ".*\\/([^/]+)\\.csv$", replacement = "\\1")
   
-  # add metadata info (conditions & serum) to table with observations (signal intensities for each cell)
+  plate_metadata <- plate_metadata %>%
+    mutate(plate = metadata_file_name)
+  
+  # add metadata info to tidied_IAoutput file
   
   ## mutating join with left_join()
   
@@ -55,10 +60,13 @@ The only metadata that can be entered in the plate-template file are
   
   tidied_IAoutput_df %>%
     left_join(plate_metadata, by = "well") %>%
-    select(well, cell_ID, all_of(plate_metadata_variables), everything())
+    select(plate, well, cell_ID, all_of(plate_metadata_variables), everything())
 }
 
 
 # Notes -------------------------------------------------------------------
 
+# these need to be moved the data analysis part of FAST-R
 
+## additional_variables_check <-  if (length(additional_variables) > 0) {TRUE} else {FALSE}
+## multiple_additional_variables_check <- if (length(additional_variables) == 2) {TRUE} else {FALSE}
